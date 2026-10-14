@@ -1,0 +1,793 @@
+<title>Shiftbook Design</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a design sheet on top (palette, type, parts), then a gallery of phone screens that wraps to one column on phones.
+   Design language "Time Card": the paper time card + punch clock. Mono "stamp" numbers, notched ticket cards, three meaning colors. */
+:root{
+  --paper:#F1F4F1; --card:#FFFFFF; --ink:#16201B; --muted:#5C6761; --line:#DAE0DB; --sunk:#E6EBE7;
+  --green:#127A55; --green-soft:#DCEFE5;
+  --coral:#C94B37; --coral-soft:#F8E1DB;
+  --amber:#AD6707; --amber-soft:#F9EAD1;
+  --cat-food:#C94B37; --cat-shop:#AD6707; --cat-fuel:#2F5BB8; --cat-bills:#6E7C74; --cat-fun:#8A4FB0;
+  --bezel:#0B0F0D; --lock-a:#1D2E27; --lock-b:#0A120F; --on-dark:#F2F5F3; --on-dark-muted:#A9B8B0; --glass:rgba(255,255,255,.14); --lock-green:#4FD39C;
+  --shadow:0 22px 44px -22px rgba(20,44,32,.45);
+  --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --f-text:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:"DM Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1412; --card:#18201C; --ink:#E7EDE9; --muted:#93A199; --line:#28322D; --sunk:#202A25;
+    --green:#3DC38A; --green-soft:#16362A;
+    --coral:#F07B64; --coral-soft:#3D211B;
+    --amber:#EEA23C; --amber-soft:#3A2B13;
+    --cat-food:#F07B64; --cat-shop:#EEA23C; --cat-fuel:#6F95EA; --cat-bills:#94A39B; --cat-fun:#B888DA;
+    --shadow:0 22px 44px -22px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --card:#18201C; --ink:#E7EDE9; --muted:#93A199; --line:#28322D; --sunk:#202A25;
+  --green:#3DC38A; --green-soft:#16362A;
+  --coral:#F07B64; --coral-soft:#3D211B;
+  --amber:#EEA23C; --amber-soft:#3A2B13;
+  --cat-food:#F07B64; --cat-shop:#EEA23C; --cat-fuel:#6F95EA; --cat-bills:#94A39B; --cat-fun:#B888DA;
+  --shadow:0 22px 44px -22px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-text);font-size:15px;line-height:1.5}
+.page{max-width:1240px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:48px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.ic{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- page header ---------- */
+.top{display:flex;flex-wrap:wrap;gap:20px 32px;align-items:end;justify-content:space-between}
+.top-text{min-width:0;max-width:62ch}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.top h1{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,7vw,68px);line-height:.95;letter-spacing:-.03em;margin:0 0 12px;text-wrap:balance}
+.top p{margin:0;color:var(--muted)}
+.theme-pick{display:flex;flex-direction:column;gap:6px}
+.theme-pick span{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;background:var(--sunk);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* ---------- design sheet ---------- */
+.sheet{display:grid;gap:28px}
+.sheet h2,.gallery-head h2{font-family:var(--f-display);font-weight:700;font-size:28px;letter-spacing:-.02em;margin:0 0 6px}
+.sheet-intro{max-width:66ch;color:var(--muted);margin:0}
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px}
+.panel{background:var(--card);border-radius:20px;padding:20px;display:grid;gap:14px;align-content:start;min-width:0}
+.panel h3{margin:0;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.sw{display:grid;gap:6px}
+.sw i{display:block;height:46px;border-radius:12px;border:1px solid var(--line)}
+.sw b{font-size:13px}
+.sw small{font-size:12px;color:var(--muted);line-height:1.35}
+.type-row{display:grid;gap:2px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.type-row:last-child{border-bottom:0;padding-bottom:0}
+.type-row small{font-size:12px;color:var(--muted)}
+.t-display{font-family:var(--f-display);font-weight:800;font-size:30px;letter-spacing:-.025em;line-height:1.1}
+.t-text{font-size:17px}
+.t-num{font-family:var(--f-num);font-size:24px}
+.parts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.rules{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink);font-size:14px}
+.rules li::marker{color:var(--muted)}
+
+/* shared UI parts (used on sheet and in phones) */
+.btn{border:0;border-radius:999px;padding:12px 18px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.1}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-green{background:var(--green);color:var(--card)}
+.btn-soft{background:var(--sunk);color:var(--ink)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;line-height:1.3;white-space:nowrap}
+.chip .ic{width:12px;height:12px}
+.chip-green{background:var(--green-soft);color:var(--green)}
+.chip-amber{background:var(--amber-soft);color:var(--amber)}
+.chip-coral{background:var(--coral-soft);color:var(--coral)}
+.chip-plain{background:var(--sunk);color:var(--muted)}
+.ticket{background:var(--card);border-radius:18px;
+  -webkit-mask:radial-gradient(circle 7px at 0 var(--notch,50%),#0000 97%,#000) 0 0/51% 100% no-repeat,radial-gradient(circle 7px at 100% var(--notch,50%),#0000 97%,#000) 100% 0/51% 100% no-repeat;
+          mask:radial-gradient(circle 7px at 0 var(--notch,50%),#0000 97%,#000) 0 0/51% 100% no-repeat,radial-gradient(circle 7px at 100% var(--notch,50%),#0000 97%,#000) 100% 0/51% 100% no-repeat}
+.perf{border:0;border-top:1.5px dashed var(--line);margin:0 4px}
+
+/* ---------- gallery ---------- */
+.gallery-head p{margin:0;color:var(--muted);max-width:66ch}
+.phones{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:40px 24px;margin-top:24px}
+figure{margin:0;display:grid;gap:12px;justify-items:center;align-content:start;min-width:0}
+figcaption{width:100%;max-width:300px;display:grid;gap:2px}
+figcaption b{font-size:15px}
+figcaption span{font-size:13px;color:var(--muted);line-height:1.4}
+
+.phone{width:300px;max-width:100%;height:632px;border-radius:48px;background:var(--bezel);padding:9px;box-shadow:var(--shadow)}
+.screen{height:100%;border-radius:40px;background:var(--paper);overflow:hidden;position:relative;display:flex;flex-direction:column;font-size:13px;line-height:1.4}
+.status{height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 24px 0;font-weight:600;font-size:13px;position:relative}
+.island{position:absolute;left:50%;top:9px;width:86px;height:25px;border-radius:20px;background:var(--bezel);transform:translateX(-50%)}
+.sys{display:flex;gap:5px;align-items:center;font-size:11px}
+.sys svg{width:22px;height:11px}
+.content{flex:1;min-height:0;padding:4px 16px 12px;display:flex;flex-direction:column;gap:12px}
+.scr-head{display:flex;align-items:end;justify-content:space-between;gap:8px}
+.scr-head small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+.scr-title{font-family:var(--f-display);font-weight:800;font-size:27px;letter-spacing:-.025em;line-height:1.05;margin:0}
+.icon-btn{width:34px;height:34px;border-radius:50%;border:0;background:var(--card);display:grid;place-items:center;color:var(--ink)}
+.icon-btn .ic{width:18px;height:18px}
+.card{background:var(--card);border-radius:18px;padding:14px}
+.label{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.muted{color:var(--muted)}
+.green{color:var(--green)} .coral{color:var(--coral)} .amber{color:var(--amber)}
+
+.tabbar{flex:none;height:66px;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px 14px}
+.tab{display:grid;justify-items:center;gap:2px;font-size:10px;font-weight:600;color:var(--muted)}
+.tab .ic{width:22px;height:22px}
+.tab.on{color:var(--ink)}
+
+/* welcome */
+.welcome{flex:1;display:flex;flex-direction:column;padding:10px 22px 22px;gap:14px}
+.logo{width:58px;height:58px}
+.logo .lc{fill:var(--ink)} .logo .ln{fill:var(--paper)} .logo .lr{fill:none;stroke:var(--green);stroke-width:3.2;stroke-linecap:round}
+.welcome h3{font-family:var(--f-display);font-weight:800;font-size:36px;line-height:1;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.welcome p.lead{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+.feats{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.feats li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center}
+.feats .fi{width:34px;height:34px;border-radius:11px;display:grid;place-items:center}
+.feats .ic{width:18px;height:18px}
+.feats b{display:block;font-size:13.5px}
+.feats span{font-size:12px;color:var(--muted)}
+.dots{display:flex;gap:6px;margin-top:auto}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.on{width:20px;border-radius:4px;background:var(--ink)}
+.welcome .btn{width:100%;padding:15px}
+.textlink{border:0;background:none;font-size:13px;font-weight:600;color:var(--muted);display:inline-flex;gap:6px;align-items:center;justify-content:center;padding:4px}
+.textlink .ic{width:16px;height:16px}
+
+/* setup */
+.form{background:var(--card);border-radius:18px;padding:4px 14px}
+.field{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);min-height:46px}
+.field:last-child{border-bottom:0}
+.field > span{font-weight:500;font-size:13px}
+.field input{border:0;background:var(--sunk);border-radius:9px;padding:6px 9px;font:500 13px var(--f-num);color:var(--ink);text-align:right;width:96px}
+.field input.wide{width:120px;font-family:var(--f-text)}
+.field .unit{display:flex;align-items:center;gap:5px;font-family:var(--f-num);font-size:13px;color:var(--muted)}
+.field.col{flex-direction:column;align-items:stretch;gap:8px}
+.mini-seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--sunk);border-radius:10px;padding:2px}
+.mini-seg button{border:0;background:transparent;border-radius:8px;padding:6px 2px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.mini-seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.switch{width:44px;height:26px;border-radius:999px;border:0;background:var(--line);position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch[aria-checked="true"]{background:var(--green)}
+.switch[aria-checked="true"]::after{transform:translateX(18px)}
+.preview{padding:12px 14px;display:grid;gap:2px}
+.preview .num.big{font-size:26px;font-weight:500}
+
+/* today */
+.punch{display:grid;justify-items:center;gap:10px;padding:14px 14px 14px}
+.ring{position:relative;width:172px;height:172px}
+.ring svg{width:100%;height:100%;display:block}
+.ring .perfs{fill:none;stroke:var(--green);stroke-width:2.2;stroke-dasharray:2 7.6;stroke-linecap:round;transform-origin:100px 100px;animation:turn 40s linear infinite}
+.ring .face{fill:var(--green-soft)}
+.ring.is-break .perfs{stroke:var(--amber);animation-play-state:paused}
+.ring.is-break .face{fill:var(--amber-soft)}
+.ring.is-off .perfs{stroke:var(--line);animation:none}
+.ring.is-off .face{fill:var(--sunk)}
+@keyframes turn{to{transform:rotate(360deg)}}
+.ring-in{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:1px;text-align:center}
+.ring-in .state{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--green)}
+.ring.is-break .state{color:var(--amber)}
+.ring.is-off .state{color:var(--muted)}
+.ring-in .timer{font-size:30px;font-weight:500;line-height:1.1}
+.ring-in .earned{font-size:17px;font-weight:500;color:var(--green)}
+.ring-in small{font-size:10.5px;color:var(--muted)}
+.punch-meta{font-size:11.5px;color:var(--muted);text-align:center}
+.punch-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.punch-btns .btn{padding:11px 10px;font-size:13px}
+.punch-btns .ic{width:17px;height:17px}
+.habit-dots{display:flex;gap:6px;flex-wrap:wrap}
+.hd{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:5px 8px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.hd.done{background:var(--green-soft);color:var(--green)}
+.hd .ic{width:12px;height:12px}
+.spend{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.add{width:36px;height:36px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);display:grid;place-items:center}
+.add .ic{width:18px;height:18px}
+
+/* work */
+.period{--notch:63%;padding:14px 14px 12px;display:grid;gap:10px}
+.period .big{font-size:28px;font-weight:500;line-height:1}
+.split{display:grid;gap:5px;font-size:12px}
+.split .row span:last-child{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:3px}
+.shifts{display:grid;gap:6px}
+.shift{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:8px 12px 8px 8px}
+.date{display:grid;justify-items:center;line-height:1;gap:2px;padding:6px 0;border-radius:10px;background:var(--sunk)}
+.date b{font-family:var(--f-num);font-size:15px;font-weight:500}
+.date span{font-size:8.5px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.shift .mid{min-width:0;display:grid;gap:1px}
+.shift .mid b{font-family:var(--f-num);font-weight:500;font-size:12px}
+.shift .mid span{font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shift .end{display:grid;justify-items:end;gap:1px}
+.shift .end b{font-family:var(--f-num);font-weight:500;font-size:12.5px}
+.shift .end span{font-family:var(--f-num);font-size:10.5px;color:var(--muted)}
+.shift.live{background:var(--green-soft)}
+.shift.live .date{background:var(--card)}
+
+/* money */
+.sum3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sum3 div{display:grid;gap:2px}
+.sum3 b{font-family:var(--f-num);font-weight:500;font-size:15px}
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
+.stack i{display:block;height:100%}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:11px}
+.legend span{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.legend span em{font-style:normal;display:flex;align-items:center;gap:6px}
+.legend span em::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
+.legend span b{font-family:var(--f-num);font-weight:500}
+.hours-note{font-size:11.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.tx{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.tx:last-child{border-bottom:0}
+.tx .ti{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--sunk);color:var(--c)}
+.tx .ti .ic{width:16px;height:16px}
+.tx .mid{min-width:0;display:grid}
+.tx .mid b{font-size:12.5px;font-weight:600}
+.tx .mid span{font-size:10.5px;color:var(--muted)}
+.tx .end{display:grid;justify-items:end}
+.tx .end b{font-family:var(--f-num);font-weight:500;font-size:12.5px;color:var(--coral)}
+.tx .end span{font-family:var(--f-num);font-size:10px;color:var(--muted)}
+.list-card{padding:4px 14px}
+.fab{position:absolute;right:18px;bottom:82px;width:48px;height:48px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);display:grid;place-items:center;box-shadow:var(--shadow)}
+
+/* habits */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.week div{display:grid;justify-items:center;gap:3px;padding:6px 0;border-radius:12px;font-size:10px;font-weight:600;color:var(--muted)}
+.week div b{font-family:var(--f-num);font-size:13px;font-weight:500;color:var(--ink)}
+.week div.today{background:var(--ink);color:var(--paper)}
+.week div.today b{color:var(--paper)}
+.week div i{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.week div i.no{background:transparent}
+.habit{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:var(--card);border-radius:15px;padding:9px 10px 9px 9px}
+.habit .hi{width:36px;height:36px;border-radius:11px;display:grid;place-items:center}
+.habit .hi .ic{width:18px;height:18px}
+.habit .mid{min-width:0;display:grid;gap:2px}
+.habit .mid b{font-size:13px;font-weight:600}
+.habit .mid span{font-size:10.5px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.check{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;background:transparent;color:var(--card)}
+.check.done{background:var(--green);border-color:var(--green)}
+.check .ic{width:15px;height:15px;stroke-width:2.6}
+.count{display:flex;align-items:center;gap:6px}
+.count b{font-family:var(--f-num);font-weight:500;font-size:12px}
+.count button{width:28px;height:28px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);display:grid;place-items:center}
+.count .ic{width:14px;height:14px}
+.segs{display:flex;gap:2px;margin-top:2px}
+.segs i{width:10px;height:4px;border-radius:2px;background:var(--line)}
+.segs i.on{background:var(--green)}
+
+/* lock screen */
+.lock{background:linear-gradient(165deg,var(--lock-a),var(--lock-b));color:var(--on-dark)}
+.lock .status{color:var(--on-dark)}
+.lock-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 12px 22px}
+.lock-date{font-size:14px;font-weight:600;color:var(--on-dark-muted);margin-top:8px}
+.lock-time{font-family:var(--f-display);font-weight:700;font-size:78px;letter-spacing:-.04em;line-height:1}
+.activity{margin-top:auto;width:100%;background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;padding:14px;display:grid;gap:10px}
+.activity .row b{font-family:var(--f-num);font-weight:500}
+.act-left{display:flex;gap:10px;align-items:center;min-width:0}
+.act-ic{width:36px;height:36px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:var(--on-dark)}
+.act-ic .ic{width:18px;height:18px}
+.act-left small{display:block;font-size:11px;color:var(--on-dark-muted)}
+.act-left .num{font-size:22px;line-height:1.1}
+.act-money{font-family:var(--f-num);font-size:20px;color:var(--lock-green)}
+.act-bar{height:5px;border-radius:3px;background:var(--glass);overflow:hidden}
+.act-bar i{display:block;height:100%;background:var(--lock-green);border-radius:3px}
+.act-foot{display:flex;justify-content:space-between;font-size:10.5px;color:var(--on-dark-muted)}
+.lock-btns{width:100%;display:flex;justify-content:space-between;padding:16px 18px 0}
+.lock-btns i{width:44px;height:44px;border-radius:50%;background:var(--glass);display:grid;place-items:center}
+.lock-btns .ic{width:18px;height:18px;stroke:var(--on-dark)}
+
+@media (prefers-reduced-motion: reduce){
+  .ring .perfs{animation:none}
+  .switch,.switch::after{transition:none}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-case" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 13h18"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 24 24"><path d="M5 9h11v4.5A5.5 5.5 0 0 1 10.5 19A5.5 5.5 0 0 1 5 13.5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8.5 3.5v2.5M12.5 3.5v2.5"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 16l4-4-4-4M14 12H4"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.2 5 5.2 5 10a5 5 0 0 1-10 0c0-2.2 1-3.7 2.2-4.7.1 2 1 3 2 3.2C11 8.6 10.6 6.3 12 3z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.3 6 10.5a6 6 0 0 1-12 0c0-4.2 6-10.5 6-10.5z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5zM5 19.5A1.5 1.5 0 0 0 6.5 21H19"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4 4 0 0 1-.6-7.95A6 6 0 0 1 17.8 9.2a4.6 4.6 0 0 1-.3 9.3z"/><path d="M12 11v5M9.8 13.8L12 16l2.2-2.2"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.8"/><path d="M10 21l2.2-6.5 3 3V21M8.5 12.5l3-4.5 3.2 3 3.3 1.2M11.5 8l-1.6 5.5"/></symbol>
+  <symbol id="i-fuel" viewBox="0 0 24 24"><path d="M5 20V5.5A1.5 1.5 0 0 1 6.5 4h6A1.5 1.5 0 0 1 14 5.5V20M4 20h11M5 10h9M14 9h2.5a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 0 3 0V9l-2.5-2.5"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24"><path d="M4 11h16a8 8 0 0 1-16 0zM8 7c0-1.5 1-1.5 1-3M12 7c0-1.5 1-1.5 1-3M16 7c0-1.5 1-1.5 1-3"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-light" viewBox="0 0 24 24"><path d="M9 3h6l-1 6h-4zM10 9h4v11a2 2 0 0 1-4 0z"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8.5A1.5 1.5 0 0 1 5.5 7H8l1.5-2h5L16 7h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.2"/></symbol>
+</svg>
+
+<main class="page">
+
+  <header class="top">
+    <div class="top-text">
+      <p class="eyebrow">App design · working name</p>
+      <h1>Shiftbook</h1>
+      <p>Design language and key screens for the habit, money and pay tracker. The Today screen works: try Start break and Punch out. Type a new pay rate on the setup screen and the Today screen uses it.</p>
+    </div>
+    <div class="theme-pick">
+      <span>App theme</span>
+      <div class="seg" role="group" aria-label="App theme">
+        <button type="button" id="th-auto" data-theme-set="auto" aria-pressed="true">Auto</button>
+        <button type="button" id="th-light" data-theme-set="light" aria-pressed="false">Light</button>
+        <button type="button" id="th-dark" data-theme-set="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="sheet" aria-labelledby="dl">
+    <div>
+      <h2 id="dl">Design language: Time Card</h2>
+      <p class="sheet-intro">Based on the paper time card and the punch clock at work. Clean iPhone-style layout. All times and money use a typewriter-style number font, so digits line up like a stamped card. Key cards have punched notches on the sides. Only three colors carry meaning, so the user learns them fast.</p>
+    </div>
+    <div class="sheet-grid">
+      <div class="panel">
+        <h3>Colors</h3>
+        <div class="swatches">
+          <div class="sw"><i style="background:var(--green)"></i><b>Ledger green</b><small>Money earned, on shift, done</small></div>
+          <div class="sw"><i style="background:var(--coral)"></i><b>Spend coral</b><small>Money spent</small></div>
+          <div class="sw"><i style="background:var(--amber)"></i><b>Overtime amber</b><small>Overtime, breaks, streaks</small></div>
+          <div class="sw"><i style="background:var(--ink)"></i><b>Ink</b><small>Text and main buttons</small></div>
+          <div class="sw"><i style="background:var(--paper)"></i><b>Card paper</b><small>Screen background</small></div>
+          <div class="sw"><i style="background:var(--card)"></i><b>Card</b><small>Cards and lists</small></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Type</h3>
+        <div class="type-row"><span class="t-display">Today</span><small>Bricolage Grotesque · screen titles and big headlines</small></div>
+        <div class="type-row"><span class="t-text">Start break, Pay period, Habits</span><small>Figtree · all normal text and buttons</small></div>
+        <div class="type-row"><span class="t-num">8h 08m · $122.00</span><small>DM Mono · every time and money amount</small></div>
+      </div>
+      <div class="panel">
+        <h3>Parts</h3>
+        <div class="parts">
+          <button type="button" class="btn btn-ink" id="demo-primary">Punch out</button>
+          <button type="button" class="btn btn-soft" id="demo-secondary">Start break</button>
+          <button type="button" class="btn btn-green" id="demo-green">Punch in</button>
+        </div>
+        <div class="parts">
+          <span class="chip chip-amber">4h overtime</span>
+          <span class="chip chip-green"><svg class="ic"><use href="#i-bolt"/></svg>Auto</span>
+          <span class="chip chip-coral">Over budget</span>
+          <span class="chip chip-plain">Edited</span>
+        </div>
+        <div class="ticket" style="padding:12px 14px;background:var(--sunk);display:grid;gap:8px">
+          <div class="row"><b style="font-size:13px">Ticket card</b><span class="num muted" style="font-size:12px">notched sides</span></div>
+          <hr class="perf">
+          <span class="muted" style="font-size:12px">Used for shifts and pay periods, like a real time card.</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Rules</h3>
+        <ul class="rules">
+          <li>Green only means money coming in. Coral only means money going out.</li>
+          <li>One main button per screen, in ink.</li>
+          <li>Times and money always in the mono font.</li>
+          <li>Cards have 18px corners. Buttons are full pills.</li>
+          <li>Every color has a light and a dark version. Use the theme switch above.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="scr">
+    <div class="gallery-head">
+      <h2 id="scr">Screens</h2>
+      <p>Example data: $15.00 an hour, 12% tax estimate, overtime after 40 hours a week. The numbers match the project plan.</p>
+    </div>
+
+    <div class="phones">
+
+      <!-- WELCOME -->
+      <figure id="fig-welcome">
+        <figcaption><b>Welcome</b><span>First screen after install. One promise, three features, one button.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="welcome">
+            <svg class="logo" viewBox="0 0 64 64" aria-label="Shiftbook logo">
+              <rect class="lc" x="2" y="2" width="60" height="60" rx="16"/>
+              <circle class="ln" cx="2" cy="40" r="5"/><circle class="ln" cx="62" cy="40" r="5"/>
+              <circle class="lr" cx="32" cy="27" r="13"/>
+              <path class="lr" d="M32 20v7l5 3"/>
+              <path class="lr" d="M17 50h30" style="stroke-dasharray:3 4"/>
+            </svg>
+            <div style="display:grid;gap:10px">
+              <h3>Every minute, counted.</h3>
+              <p class="lead">Punch in and out. See exactly what you earned, where your money went, and which habits you kept.</p>
+            </div>
+            <ul class="feats">
+              <li><span class="fi" style="background:var(--green-soft);color:var(--green)"><svg class="ic"><use href="#i-clock"/></svg></span><div><b>Exact pay</b><span>Down to the minute, with overtime.</span></div></li>
+              <li><span class="fi" style="background:var(--coral-soft);color:var(--coral)"><svg class="ic"><use href="#i-wallet"/></svg></span><div><b>Money in, money out</b><span>Your pay flows in by itself.</span></div></li>
+              <li><span class="fi" style="background:var(--amber-soft);color:var(--amber)"><svg class="ic"><use href="#i-check"/></svg></span><div><b>Habits that check themselves</b><span>Like a no-spend day.</span></div></li>
+            </ul>
+            <div class="dots" aria-label="Step 1 of 3"><i class="on"></i><i></i><i></i></div>
+            <div style="display:grid;gap:6px">
+              <button type="button" class="btn btn-ink" id="get-started">Get started</button>
+              <button type="button" class="textlink" id="restore"><svg class="ic"><use href="#i-cloud"/></svg>Restore from backup</button>
+            </div>
+          </div>
+        </div></div>
+      </figure>
+
+      <!-- SETUP -->
+      <figure id="fig-setup">
+        <figcaption><b>First setup</b><span>Step 2 of 3. Type your pay rate and see an 8-hour shift right away.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="content">
+            <div class="row"><button type="button" class="icon-btn" id="setup-back" aria-label="Back"><svg class="ic"><use href="#i-chev"/></svg></button><span class="label">Step 2 of 3</span></div>
+            <div><h3 class="scr-title">Your job</h3><small class="muted" style="font-size:12px">You can change all of this later.</small></div>
+            <div class="form">
+              <label class="field"><span>Job name</span><input class="wide" id="job" value="Gas station"></label>
+              <label class="field"><span>Pay per hour</span><span class="unit">$<input id="rate" type="number" inputmode="decimal" min="0" step="0.25" value="15.00"></span></label>
+              <div class="field col"><span>Pay period</span>
+                <div class="mini-seg" role="group" aria-label="Pay period">
+                  <button type="button" id="pp-week" data-seg="pp" aria-pressed="false">Weekly</button>
+                  <button type="button" id="pp-two" data-seg="pp" aria-pressed="true">Every 2 weeks</button>
+                  <button type="button" id="pp-month" data-seg="pp" aria-pressed="false">Monthly</button>
+                </div>
+              </div>
+              <div class="field"><span>Overtime<br><small class="muted num" style="font-size:10.5px">after 40h a week · 1.5×</small></span><button type="button" class="switch" id="ot" role="switch" aria-checked="true" aria-label="Overtime"></button></div>
+              <label class="field"><span>Tax estimate</span><span class="unit"><input id="tax" type="number" inputmode="decimal" min="0" max="60" step="1" value="12" style="width:56px">%</span></label>
+            </div>
+            <div class="ticket preview" style="--notch:50%">
+              <span class="label">An 8-hour shift</span>
+              <div class="row"><span class="num big green" id="pv-pay">$120.00</span><span class="num muted" style="font-size:12px" id="pv-take">≈ $105.60 take-home</span></div>
+            </div>
+            <button type="button" class="btn btn-ink" id="setup-continue" style="margin-top:auto;padding:14px">Continue</button>
+          </div>
+        </div></div>
+      </figure>
+
+      <!-- TODAY -->
+      <figure id="fig-today">
+        <figcaption><b>Today, on shift</b><span>Live timer and money earned. This one works: try the buttons.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="content">
+            <div class="scr-head"><div><small>Wednesday, Oct 14</small><h3 class="scr-title">Today</h3></div><button type="button" class="icon-btn" id="settings" aria-label="Settings"><svg class="ic"><use href="#i-sliders"/></svg></button></div>
+
+            <div class="card punch">
+              <div class="ring" id="ring">
+                <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="perfs" cx="100" cy="100" r="94"/><circle class="face" cx="100" cy="100" r="82"/></svg>
+                <div class="ring-in">
+                  <span class="state" id="shift-state">ON SHIFT</span>
+                  <span class="num timer" data-timer>3:42:18</span>
+                  <span class="num earned" data-earned>$55.53</span>
+                  <small id="earned-label">earned so far</small>
+                </div>
+              </div>
+              <div class="punch-meta num" id="punch-meta">In at 8:57 AM · <span data-rate>$15.00</span>/hr</div>
+              <div class="punch-btns">
+                <button type="button" class="btn btn-soft" id="btn-break"><svg class="ic"><use href="#i-cup"/></svg><span>Start break</span></button>
+                <button type="button" class="btn btn-ink" id="btn-punch"><svg class="ic"><use href="#i-out"/></svg><span>Punch out</span></button>
+              </div>
+            </div>
+
+            <div class="card" style="display:grid;gap:8px">
+              <div class="row"><span class="label">Habits</span><span class="num muted" style="font-size:11px">3 of 5</span></div>
+              <div class="habit-dots">
+                <span class="hd done"><svg class="ic"><use href="#i-tick"/></svg>Read</span>
+                <span class="hd done"><svg class="ic"><use href="#i-tick"/></svg>On time</span>
+                <span class="hd done"><svg class="ic"><use href="#i-tick"/></svg>Food &lt; $20</span>
+                <span class="hd">Water 6/8</span>
+                <span class="hd">Walk</span>
+              </div>
+            </div>
+
+            <div class="card spend">
+              <div><span class="label">Spent today</span><div class="row" style="gap:8px;justify-content:flex-start"><span class="num coral" style="font-size:20px">$6.50</span><span class="num muted" style="font-size:11px">= 30m of work</span></div></div>
+              <button type="button" class="add" id="add-expense" aria-label="Add expense"><svg class="ic"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="Tabs">
+            <span class="tab on"><svg class="ic"><use href="#i-clock"/></svg>Today</span>
+            <span class="tab"><svg class="ic"><use href="#i-case"/></svg>Work</span>
+            <span class="tab"><svg class="ic"><use href="#i-wallet"/></svg>Money</span>
+            <span class="tab"><svg class="ic"><use href="#i-check"/></svg>Habits</span>
+          </nav>
+        </div></div>
+      </figure>
+
+      <!-- WORK -->
+      <figure>
+        <figcaption><b>Work</b><span>Pay period so far, overtime, and every shift. Totals count finished shifts only.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="content">
+            <div class="scr-head"><div><small>Gas station</small><h3 class="scr-title">Work</h3></div><button type="button" class="icon-btn" id="add-shift" aria-label="Add missed shift"><svg class="ic"><use href="#i-plus"/></svg></button></div>
+
+            <div class="ticket period">
+              <div class="row"><span class="label">Pay period · Oct 4 – 17</span><span class="chip chip-plain">Payday Oct 23</span></div>
+              <div><span class="num big">$928.25</span><div class="num muted" style="font-size:11.5px;margin-top:4px">≈ $816.86 take-home</div></div>
+              <hr class="perf">
+              <div class="split">
+                <div class="row"><span>Regular · 55h 53m</span><span>$838.25</span></div>
+                <div class="row"><span class="amber">Overtime · 4h 00m</span><span class="amber">$90.00</span></div>
+              </div>
+            </div>
+
+            <div style="display:grid;gap:5px">
+              <div class="row" style="font-size:11px"><span class="muted">This week, before overtime</span><span class="num">15h 53m / 40h</span></div>
+              <div class="bar"><i style="width:39.7%"></i></div>
+            </div>
+
+            <div class="shifts">
+              <div class="shift live"><div class="date"><b>14</b><span>WED</span></div><div class="mid"><b>8:57a – now</b><span>On shift</span></div><div class="end"><b class="green" data-earned>$55.53</b><span data-timer-short>3h 42m</span></div></div>
+              <div class="shift"><div class="date"><b>13</b><span>TUE</span></div><div class="mid"><b>8:57a – 5:34p</b><span>29m break</span></div><div class="end"><b>$122.00</b><span>8h 08m</span></div></div>
+              <div class="shift"><div class="date"><b>12</b><span>MON</span></div><div class="mid"><b>9:00a – 5:15p</b><span>30m break</span></div><div class="end"><b>$116.25</b><span>7h 45m</span></div></div>
+              <div class="shift"><div class="date"><b>10</b><span>SAT</span></div><div class="mid"><b>10:00a – 6:30p</b><span><span class="chip chip-amber" style="padding:1px 6px;font-size:9.5px">4h overtime</span></span></div><div class="end"><b>$150.00</b><span>8h 00m</span></div></div>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="Tabs">
+            <span class="tab"><svg class="ic"><use href="#i-clock"/></svg>Today</span>
+            <span class="tab on"><svg class="ic"><use href="#i-case"/></svg>Work</span>
+            <span class="tab"><svg class="ic"><use href="#i-wallet"/></svg>Money</span>
+            <span class="tab"><svg class="ic"><use href="#i-check"/></svg>Habits</span>
+          </nav>
+        </div></div>
+      </figure>
+
+      <!-- MONEY -->
+      <figure>
+        <figcaption><b>Money</b><span>October: earned, spent, left. Every expense also shows how much work it cost.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="content">
+            <div class="scr-head"><div><small>October 2026</small><h3 class="scr-title">Money</h3></div></div>
+
+            <div class="card sum3">
+              <div><span class="label">Earned</span><b class="green">$872.40</b></div>
+              <div><span class="label">Spent</span><b class="coral">$486.35</b></div>
+              <div><span class="label">Left</span><b>$386.05</b></div>
+            </div>
+
+            <div class="card" style="display:grid;gap:10px">
+              <span class="label">Spent by category</span>
+              <div class="stack" role="img" aria-label="Food 29%, Shopping 23%, Fuel 20%, Bills 17%, Fun 10%">
+                <i style="flex:142.80;background:var(--cat-food)"></i><i style="flex:112.55;background:var(--cat-shop)"></i><i style="flex:96;background:var(--cat-fuel)"></i><i style="flex:85;background:var(--cat-bills)"></i><i style="flex:50;background:var(--cat-fun)"></i>
+              </div>
+              <div class="legend">
+                <span style="--c:var(--cat-food)"><em>Food</em><b>$142.80</b></span>
+                <span style="--c:var(--cat-shop)"><em>Shopping</em><b>$112.55</b></span>
+                <span style="--c:var(--cat-fuel)"><em>Fuel</em><b>$96.00</b></span>
+                <span style="--c:var(--cat-bills)"><em>Bills</em><b>$85.00</b></span>
+                <span style="--c:var(--cat-fun)"><em>Fun</em><b>$50.00</b></span>
+              </div>
+              <div class="hours-note">Food this month = <b class="num" style="color:var(--ink)">10h 49m</b> of work</div>
+            </div>
+
+            <div class="card list-card">
+              <div class="tx" style="--c:var(--cat-food)"><span class="ti"><svg class="ic"><use href="#i-food"/></svg></span><div class="mid"><b>Chai &amp; samosa</b><span>Today · Food</span></div><div class="end"><b>−$6.50</b><span>30m of work</span></div></div>
+              <div class="tx" style="--c:var(--cat-fuel)"><span class="ti"><svg class="ic"><use href="#i-fuel"/></svg></span><div class="mid"><b>Gas</b><span>Yesterday · Fuel</span></div><div class="end"><b>−$48.00</b><span>3h 38m of work</span></div></div>
+              <div class="tx" style="--c:var(--cat-bills)"><span class="ti"><svg class="ic"><use href="#i-phone"/></svg></span><div class="mid"><b>Phone bill</b><span>Oct 12 · Repeats monthly</span></div><div class="end"><b>−$45.00</b><span>3h 25m of work</span></div></div>
+            </div>
+          </div>
+          <button type="button" class="fab" id="fab" aria-label="Add expense or income"><svg class="ic"><use href="#i-plus"/></svg></button>
+          <nav class="tabbar" aria-label="Tabs">
+            <span class="tab"><svg class="ic"><use href="#i-clock"/></svg>Today</span>
+            <span class="tab"><svg class="ic"><use href="#i-case"/></svg>Work</span>
+            <span class="tab on"><svg class="ic"><use href="#i-wallet"/></svg>Money</span>
+            <span class="tab"><svg class="ic"><use href="#i-check"/></svg>Habits</span>
+          </nav>
+        </div></div>
+      </figure>
+
+      <!-- HABITS -->
+      <figure>
+        <figcaption><b>Habits</b><span>Auto habits check themselves from your shifts and spending. Tap the circles.</span></figcaption>
+        <div class="phone"><div class="screen">
+          <div class="status"><span>12:39</span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="content">
+            <div class="scr-head"><div><small>3 of 5 done today</small><h3 class="scr-title">Habits</h3></div><button type="button" class="icon-btn" id="add-habit" aria-label="Add habit"><svg class="ic"><use href="#i-plus"/></svg></button></div>
+
+            <div class="card week" style="padding:6px">
+              <div><span>S</span><b>11</b><i></i></div>
+              <div><span>M</span><b>12</b><i></i></div>
+              <div><span>T</span><b>13</b><i></i></div>
+              <div class="today"><span>W</span><b>14</b><i class="no"></i></div>
+              <div><span>T</span><b>15</b><i class="no"></i></div>
+              <div><span>F</span><b>16</b><i class="no"></i></div>
+              <div><span>S</span><b>17</b><i class="no"></i></div>
+            </div>
+
+            <div style="display:grid;gap:7px">
+              <div class="habit"><span class="hi" style="background:var(--green-soft);color:var(--green)"><svg class="ic"><use href="#i-book"/></svg></span><div class="mid"><b>Read 10 pages</b><span class="amber num"><svg class="ic" style="width:12px;height:12px"><use href="#i-flame"/></svg>12-day streak</span></div><button type="button" class="check done" id="h-read" aria-pressed="true" aria-label="Read 10 pages, done"><svg class="ic"><use href="#i-tick"/></svg></button></div>
+
+              <div class="habit"><span class="hi" style="background:var(--sunk);color:var(--cat-fuel)"><svg class="ic"><use href="#i-drop"/></svg></span><div class="mid"><b>Drink water</b><span class="segs" id="water-segs"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div><div class="count"><b id="water-n">6/8</b><button type="button" id="water-plus" aria-label="Add one glass"><svg class="ic"><use href="#i-plus"/></svg></button></div></div>
+
+              <div class="habit"><span class="hi" style="background:var(--coral-soft);color:var(--coral)"><svg class="ic"><use href="#i-food"/></svg></span><div class="mid"><b>Food under $20</b><span><span class="chip chip-green" style="padding:1px 6px;font-size:9.5px"><svg class="ic"><use href="#i-bolt"/></svg>Auto</span><span class="num">$6.50 so far</span></span></div><span class="check done" aria-label="On track"><svg class="ic"><use href="#i-tick"/></svg></span></div>
+
+              <div class="habit"><span class="hi" style="background:var(--green-soft);color:var(--green)"><svg class="ic"><use href="#i-clock"/></svg></span><div class="mid"><b>Punch in on time</b><span><span class="chip chip-green" style="padding:1px 6px;font-size:9.5px"><svg class="ic"><use href="#i-bolt"/></svg>Auto</span><span class="num">in at 8:57 AM</span></span></div><span class="check done" aria-label="Done"><svg class="ic"><use href="#i-tick"/></svg></span></div>
+
+              <div class="habit"><span class="hi" style="background:var(--amber-soft);color:var(--amber)"><svg class="ic"><use href="#i-walk"/></svg></span><div class="mid"><b>Walk 20 minutes</b><span class="num">4 of 5 days this week</span></div><button type="button" class="check" id="h-walk" aria-pressed="false" aria-label="Walk 20 minutes, not done"><svg class="ic"><use href="#i-tick"/></svg></button></div>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="Tabs">
+            <span class="tab"><svg class="ic"><use href="#i-clock"/></svg>Today</span>
+            <span class="tab"><svg class="ic"><use href="#i-case"/></svg>Work</span>
+            <span class="tab"><svg class="ic"><use href="#i-wallet"/></svg>Money</span>
+            <span class="tab on"><svg class="ic"><use href="#i-check"/></svg>Habits</span>
+          </nav>
+        </div></div>
+      </figure>
+
+      <!-- LOCK SCREEN -->
+      <figure>
+        <figcaption><b>Lock screen</b><span>Live timer and pay while you're on shift, without opening the app.</span></figcaption>
+        <div class="phone"><div class="screen lock">
+          <div class="status"><span></span><i class="island"></i><span class="sys">5G<svg viewBox="0 0 22 11"><rect x=".5" y=".5" width="18" height="10" rx="3" style="fill:none;stroke:currentColor;opacity:.5"/><rect x="2" y="2" width="13" height="7" rx="1.6" style="fill:currentColor"/></svg></span></div>
+          <div class="lock-body">
+            <span class="lock-date">Wednesday, October 14</span>
+            <span class="lock-time">12:39</span>
+            <div class="activity">
+              <div class="row">
+                <div class="act-left"><span class="act-ic"><svg class="ic"><use href="#i-clock"/></svg></span><div><small id="lock-state">On shift · Gas station</small><span class="num" data-timer>3:42:18</span></div></div>
+                <span class="act-money" data-earned>$55.53</span>
+              </div>
+              <div class="act-bar"><i id="lock-bar" style="width:46%"></i></div>
+              <div class="act-foot"><span>In at 8:57 AM</span><span>8h shift goal</span></div>
+            </div>
+            <div class="lock-btns"><i><svg class="ic"><use href="#i-light"/></svg></i><i><svg class="ic"><use href="#i-cam"/></svg></i></div>
+          </div>
+        </div></div>
+      </figure>
+
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  // ---- theme switch ----
+  var themeBtns = document.querySelectorAll('[data-theme-set]');
+  themeBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.getAttribute('data-theme-set');
+      if (v === 'auto') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', v);
+      themeBtns.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+  });
+
+  // ---- setup screen ----
+  var rateEl = document.getElementById('rate');
+  var taxEl = document.getElementById('tax');
+  function rate(){ var r = parseFloat(rateEl.value); return isFinite(r) && r >= 0 ? r : 0; }
+  function tax(){ var t = parseFloat(taxEl.value); return isFinite(t) && t >= 0 && t < 100 ? t : 0; }
+  function money(v){ return '$' + v.toFixed(2); }
+  function updatePreview(){
+    var pay = 8 * rate();
+    document.getElementById('pv-pay').textContent = money(pay);
+    document.getElementById('pv-take').textContent = '≈ ' + money(pay * (1 - tax()/100)) + ' take-home';
+    document.querySelectorAll('[data-rate]').forEach(function(e){ e.textContent = money(rate()); });
+    render();
+  }
+  rateEl.addEventListener('input', updatePreview);
+  taxEl.addEventListener('input', updatePreview);
+  document.querySelectorAll('[data-seg]').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('[data-seg="'+b.getAttribute('data-seg')+'"]').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    });
+  });
+  var ot = document.getElementById('ot');
+  ot.addEventListener('click', function(){ ot.setAttribute('aria-checked', ot.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); });
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function go(id){ var el = document.getElementById(id); if (el) el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'start'}); }
+  document.getElementById('get-started').addEventListener('click', function(){ go('fig-setup'); });
+  document.getElementById('setup-continue').addEventListener('click', function(){ go('fig-today'); });
+  document.getElementById('setup-back').addEventListener('click', function(){ go('fig-welcome'); });
+
+  // ---- shift timer (Today, Work, Lock screen) ----
+  var start = Date.now() - ((3*60 + 42)*60 + 18) * 1000; // punched in 3h 42m 18s ago
+  var state = 'on';           // on | break | off
+  var breakStart = 0, breakTotal = 0, endTime = 0;
+  var ring = document.getElementById('ring');
+  var stateEl = document.getElementById('shift-state');
+  var metaEl = document.getElementById('punch-meta');
+  var breakBtn = document.getElementById('btn-break');
+  var punchBtn = document.getElementById('btn-punch');
+  var lockState = document.getElementById('lock-state');
+  var lockBar = document.getElementById('lock-bar');
+
+  function workedSec(now){
+    var end = state === 'off' ? endTime : now;
+    var br = breakTotal + (state === 'break' ? now - breakStart : 0);
+    return Math.max(0, (end - start - br) / 1000);
+  }
+  function hms(s){ s = Math.floor(s); var h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return h + ':' + String(m).padStart(2,'0') + ':' + String(x).padStart(2,'0'); }
+  function hm(s){ s = Math.floor(s/60); return Math.floor(s/60) + 'h ' + String(s%60).padStart(2,'0') + 'm'; }
+  function render(){
+    var now = Date.now(), w = workedSec(now);
+    var earned = Math.floor(w / 3600 * rate() * 100) / 100;
+    document.querySelectorAll('[data-timer]').forEach(function(e){ e.textContent = hms(w); });
+    document.querySelectorAll('[data-timer-short]').forEach(function(e){ e.textContent = hm(w); });
+    document.querySelectorAll('[data-earned]').forEach(function(e){ e.textContent = money(earned); });
+    lockBar.style.width = Math.min(100, w / (8*3600) * 100).toFixed(1) + '%';
+    if (state === 'break') stateEl.textContent = 'ON BREAK · ' + hm((now - breakStart)/1000).replace('0h ','');
+  }
+  function setLabel(btn, text){ btn.querySelector('span').textContent = text; }
+
+  breakBtn.addEventListener('click', function(){
+    var now = Date.now();
+    if (state === 'on'){
+      state = 'break'; breakStart = now;
+      ring.className = 'ring is-break'; setLabel(breakBtn, 'End break');
+      lockState.textContent = 'On break · pay paused';
+    } else if (state === 'break'){
+      breakTotal += now - breakStart; state = 'on';
+      ring.className = 'ring'; stateEl.textContent = 'ON SHIFT'; setLabel(breakBtn, 'Start break');
+      lockState.textContent = 'On shift · Gas station';
+    }
+    render();
+  });
+
+  punchBtn.addEventListener('click', function(){
+    var now = Date.now();
+    if (state === 'off'){
+      start = now; breakTotal = 0; state = 'on';
+      ring.className = 'ring'; stateEl.textContent = 'ON SHIFT';
+      setLabel(punchBtn, 'Punch out'); punchBtn.className = 'btn btn-ink';
+      breakBtn.hidden = false;
+      var t = new Date(now);
+      metaEl.innerHTML = 'In at ' + t.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) + ' · <span data-rate>' + money(rate()) + '</span>/hr';
+      document.getElementById('earned-label').textContent = 'earned so far';
+      lockState.textContent = 'On shift · Gas station';
+    } else {
+      if (state === 'break'){ breakTotal += now - breakStart; setLabel(breakBtn, 'Start break'); }
+      endTime = now; state = 'off';
+      ring.className = 'ring is-off'; stateEl.textContent = 'SHIFT SAVED';
+      setLabel(punchBtn, 'Punch in'); punchBtn.className = 'btn btn-green';
+      breakBtn.hidden = true;
+      metaEl.textContent = 'Saved to Work · ' + hm(workedSec(now));
+      document.getElementById('earned-label').textContent = 'earned this shift';
+      lockState.textContent = 'Shift saved · Gas station';
+    }
+    render();
+  });
+  // punch buttons in the grid stay two columns; when break is hidden, punch spans both
+  var obs = new MutationObserver(function(){ punchBtn.style.gridColumn = breakBtn.hidden ? '1 / -1' : ''; });
+  obs.observe(breakBtn, {attributes:true, attributeFilter:['hidden']});
+
+  // ---- habits ----
+  ['h-read','h-walk'].forEach(function(id){
+    var b = document.getElementById(id);
+    b.addEventListener('click', function(){
+      var on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.classList.toggle('done', on);
+    });
+  });
+  var water = 6;
+  document.getElementById('water-plus').addEventListener('click', function(){
+    water = water >= 8 ? 0 : water + 1;
+    document.getElementById('water-n').textContent = water + '/8';
+    document.querySelectorAll('#water-segs i').forEach(function(s, i){ s.classList.toggle('on', i < water); });
+  });
+
+  render();
+  setInterval(render, 1000);
+})();
+</script>
