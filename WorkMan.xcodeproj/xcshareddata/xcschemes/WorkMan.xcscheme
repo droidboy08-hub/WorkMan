@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B1A0C082E9F000100A1B2C3"
-               BuildableName = "Shiftbook.app"
-               BlueprintName = "Shiftbook"
-               ReferencedContainer = "container:Shiftbook.xcodeproj">
+               BuildableName = "WorkMan.app"
+               BlueprintName = "WorkMan"
+               ReferencedContainer = "container:WorkMan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5B1A0C0B2E9F000100A1B2C3"
-               BuildableName = "ShiftbookTests.xctest"
-               BlueprintName = "ShiftbookTests"
-               ReferencedContainer = "container:Shiftbook.xcodeproj">
+               BuildableName = "WorkManTests.xctest"
+               BlueprintName = "WorkManTests"
+               ReferencedContainer = "container:WorkMan.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B1A0C082E9F000100A1B2C3"
-            BuildableName = "Shiftbook.app"
-            BlueprintName = "Shiftbook"
-            ReferencedContainer = "container:Shiftbook.xcodeproj">
+            BuildableName = "WorkMan.app"
+            BlueprintName = "WorkMan"
+            ReferencedContainer = "container:WorkMan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,9 +74,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5B1A0C082E9F000100A1B2C3"
-            BuildableName = "Shiftbook.app"
-            BlueprintName = "Shiftbook"
-            ReferencedContainer = "container:Shiftbook.xcodeproj">
+            BuildableName = "WorkMan.app"
+            BlueprintName = "WorkMan"
+            ReferencedContainer = "container:WorkMan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

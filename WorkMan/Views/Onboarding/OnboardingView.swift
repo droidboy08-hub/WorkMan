@@ -235,7 +235,7 @@ struct JobSetupStep: View {
                 .tint(Theme.green)
                 .card()
 
-                Button("Start using Shiftbook", action: finish)
+                Button("Start using WorkMan", action: finish)
                     .buttonStyle(.pillInk)
                     .disabled(!canContinue)
                     .opacity(canContinue ? 1 : 0.5)

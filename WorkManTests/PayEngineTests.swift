@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import Shiftbook
+@testable import WorkMan
 
 /// Every example from the project plan, plus the tricky cases.
 /// Run them in Xcode with Product › Test (⌘U).

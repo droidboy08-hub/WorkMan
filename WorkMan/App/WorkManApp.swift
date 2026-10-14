@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct ShiftbookApp: App {
+struct WorkManApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()

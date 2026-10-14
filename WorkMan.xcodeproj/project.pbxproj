@@ -12,25 +12,25 @@
 			containerPortal = 5B1A0C002E9F000100A1B2C3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5B1A0C082E9F000100A1B2C3;
-			remoteInfo = Shiftbook;
+			remoteInfo = WorkMan;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5B1A0C092E9F000100A1B2C3 /* Shiftbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shiftbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B1A0C0A2E9F000100A1B2C3 /* ShiftbookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShiftbookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B1A0C092E9F000100A1B2C3 /* WorkMan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorkMan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B1A0C0A2E9F000100A1B2C3 /* WorkManTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WorkManTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B1A0C1A2E9F000100A1B2C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5B1A0C042E9F000100A1B2C3 /* Shiftbook */ = {
+		5B1A0C042E9F000100A1B2C3 /* WorkMan */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Shiftbook;
+			path = WorkMan;
 			sourceTree = "<group>";
 		};
-		5B1A0C052E9F000100A1B2C3 /* ShiftbookTests */ = {
+		5B1A0C052E9F000100A1B2C3 /* WorkManTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ShiftbookTests;
+			path = WorkManTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -57,8 +57,8 @@
 			isa = PBXGroup;
 			children = (
 				5B1A0C1A2E9F000100A1B2C3 /* Info.plist */,
-				5B1A0C042E9F000100A1B2C3 /* Shiftbook */,
-				5B1A0C052E9F000100A1B2C3 /* ShiftbookTests */,
+				5B1A0C042E9F000100A1B2C3 /* WorkMan */,
+				5B1A0C052E9F000100A1B2C3 /* WorkManTests */,
 				5B1A0C022E9F000100A1B2C3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,8 +66,8 @@
 		5B1A0C022E9F000100A1B2C3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5B1A0C092E9F000100A1B2C3 /* Shiftbook.app */,
-				5B1A0C0A2E9F000100A1B2C3 /* ShiftbookTests.xctest */,
+				5B1A0C092E9F000100A1B2C3 /* WorkMan.app */,
+				5B1A0C0A2E9F000100A1B2C3 /* WorkManTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,9 +75,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5B1A0C082E9F000100A1B2C3 /* Shiftbook */ = {
+		5B1A0C082E9F000100A1B2C3 /* WorkMan */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5B1A0C182E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "Shiftbook" */;
+			buildConfigurationList = 5B1A0C182E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "WorkMan" */;
 			buildPhases = (
 				5B1A0C102E9F000100A1B2C3 /* Sources */,
 				5B1A0C112E9F000100A1B2C3 /* Frameworks */,
@@ -88,18 +88,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5B1A0C042E9F000100A1B2C3 /* Shiftbook */,
+				5B1A0C042E9F000100A1B2C3 /* WorkMan */,
 			);
-			name = Shiftbook;
+			name = WorkMan;
 			packageProductDependencies = (
 			);
-			productName = Shiftbook;
-			productReference = 5B1A0C092E9F000100A1B2C3 /* Shiftbook.app */;
+			productName = WorkMan;
+			productReference = 5B1A0C092E9F000100A1B2C3 /* WorkMan.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5B1A0C0B2E9F000100A1B2C3 /* ShiftbookTests */ = {
+		5B1A0C0B2E9F000100A1B2C3 /* WorkManTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5B1A0C192E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "ShiftbookTests" */;
+			buildConfigurationList = 5B1A0C192E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "WorkManTests" */;
 			buildPhases = (
 				5B1A0C132E9F000100A1B2C3 /* Sources */,
 				5B1A0C142E9F000100A1B2C3 /* Frameworks */,
@@ -111,13 +111,13 @@
 				5B1A0C0F2E9F000100A1B2C3 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				5B1A0C052E9F000100A1B2C3 /* ShiftbookTests */,
+				5B1A0C052E9F000100A1B2C3 /* WorkManTests */,
 			);
-			name = ShiftbookTests;
+			name = WorkManTests;
 			packageProductDependencies = (
 			);
-			productName = ShiftbookTests;
-			productReference = 5B1A0C0A2E9F000100A1B2C3 /* ShiftbookTests.xctest */;
+			productName = WorkManTests;
+			productReference = 5B1A0C0A2E9F000100A1B2C3 /* WorkManTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -139,7 +139,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5B1A0C032E9F000100A1B2C3 /* Build configuration list for PBXProject "Shiftbook" */;
+			buildConfigurationList = 5B1A0C032E9F000100A1B2C3 /* Build configuration list for PBXProject "WorkMan" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -153,8 +153,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5B1A0C082E9F000100A1B2C3 /* Shiftbook */,
-				5B1A0C0B2E9F000100A1B2C3 /* ShiftbookTests */,
+				5B1A0C082E9F000100A1B2C3 /* WorkMan */,
+				5B1A0C0B2E9F000100A1B2C3 /* WorkManTests */,
 			);
 		};
 /* End PBXProject section */
@@ -196,7 +196,7 @@
 /* Begin PBXTargetDependency section */
 		5B1A0C0F2E9F000100A1B2C3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5B1A0C082E9F000100A1B2C3 /* Shiftbook */;
+			target = 5B1A0C082E9F000100A1B2C3 /* WorkMan */;
 			targetProxy = 5B1A0C0E2E9F000100A1B2C3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -332,7 +332,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Shiftbook;
+				INFOPLIST_KEY_CFBundleDisplayName = WorkMan;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -342,7 +342,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.shiftbook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.workman;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -361,7 +361,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Shiftbook;
+				INFOPLIST_KEY_CFBundleDisplayName = WorkMan;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -371,7 +371,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.shiftbook;
+				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.workman;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -389,12 +389,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.shiftbookTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.workmanTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Shiftbook.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Shiftbook";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WorkMan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WorkMan";
 			};
 			name = Debug;
 		};
@@ -408,19 +408,19 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.shiftbookTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.droidboy.workmanTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Shiftbook.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Shiftbook";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WorkMan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WorkMan";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5B1A0C032E9F000100A1B2C3 /* Build configuration list for PBXProject "Shiftbook" */ = {
+		5B1A0C032E9F000100A1B2C3 /* Build configuration list for PBXProject "WorkMan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B1A0C1B2E9F000100A1B2C3 /* Debug */,
@@ -429,7 +429,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5B1A0C182E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "Shiftbook" */ = {
+		5B1A0C182E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "WorkMan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B1A0C1D2E9F000100A1B2C3 /* Debug */,
@@ -438,7 +438,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5B1A0C192E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "ShiftbookTests" */ = {
+		5B1A0C192E9F000100A1B2C3 /* Build configuration list for PBXNativeTarget "WorkManTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B1A0C1F2E9F000100A1B2C3 /* Debug */,

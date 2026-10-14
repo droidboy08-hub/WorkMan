@@ -95,7 +95,7 @@ struct SettingsView: View {
                 Section {
                     Button("Delete everything and start over", role: .destructive) { confirmReset = true }
                 } footer: {
-                    Text("Shiftbook \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · All data stays on this phone.")
+                    Text("WorkMan \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "") · All data stays on this phone.")
                 }
             }
             .font(AppFont.text(16))
